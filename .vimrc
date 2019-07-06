@@ -1,0 +1,242 @@
+" 基本设置----------------{{{
+" 不兼容vi模式 必须放在第一行
+set nocompatible
+syntax on                   " 开启语法高亮
+set cursorline              " 高亮当前行
+set incsearch               " 开启搜索高亮
+set history =500            " 设定历史记录数
+set clipboard=unnamedplus   " 设定为系统剪贴板
+set nobackup                " 消除~后缀备份文件
+set noundofile              " 消除un后缀备份文件
+set number                  " 显示行号
+set hlsearch                " 高亮搜索项
+"------------------------------- tab 相关设置 ---------------------
+set tabstop=4                " 设置tab的宽度
+set shiftwidth=4             " 每一次缩进对应的空格数
+set softtabstop=4            " 按退格键是可以一次删除4个空格
+set smarttab                 
+set expandtab                " 将tab自动转化为空格
+set shiftround               " 缩进时，取整
+
+set smartindent              " 智能缩进
+set autoindent               " 自动缩进
+set textwidth=79
+let mapleader=","            " 设置mapleader为逗号
+set fileformat=unix          " Set保存文件格式
+" 设置编码
+set encoding=utf-8
+language messages zh_CN.utf-8
+set t_Co=256
+
+" Tab Set -------------------
+augroup tab_set
+    autocmd!
+    autocmd FileType php,python,c,java,perl,shell,bash,vim,ruby,cpp,javascript set ai
+    autocmd FileType php,python,c,java,perl,shell,bash,vim,ruby,cpp,javascript set sw=4
+    autocmd FileType php,python,c,java,perl,shell,bash,vim,ruby,cpp,javascript set ts=4
+    autocmd FileType php,python,c,java,perl,shell,bash,vim,ruby,cpp,javascript set sts=4
+    autocmd FileType coffee,html,css,xml set ai
+    autocmd FileType coffee,html,css,xml set sw=2
+    autocmd FileType coffee,html,css,xml set ts=2
+    autocmd FileType coffee,html,css,xml set sts=2
+    autocmd FileType yaml setlocal tabstop=2 expandtab shiftwidth=2 softtabstop=2
+augroup END
+"}}}
+
+" 映射-------------------{{{
+" CTRL-A 是全选  
+map <C-A> ggVGY
+map! <C-A> <Esc>ggVGY
+map <F12> gg=G
+" 选中状态下 Ctrl+c 复制
+vmap <C-c> "+y
+set pastetoggle=<F2>
+" 定义快速打开加载.vimrc和.vimrc.vundle文件
+nnoremap <leader>ev :split $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>ep :split $HOME/.vimrc.vundle<cr>
+
+" c-j/k映射成翻页键
+nnoremap <c-j> <c-f>
+nnoremap <c-k> <c-b>
+
+" C-W +j/k/l/h可以窗口切换光标，不用按多次w
+" down
+nnoremap <C-J> <C-W><C-J> 
+" up
+nnoremap <C-K> <C-W><C-K> 
+" left"
+nnoremap <C-L> <C-W><C-L> 
+" right"
+nnoremap <C-H> <C-W><C-H> 
+" 快速保存,退出,add 'stty -ixon' to .bashrc
+imap   <C-S>   <ESC>:w<CR>
+map    <C-S>   :w<CR>
+imap   <C-Q>   <ESC>:q<CR>
+map    <C-Q>   :q<CR>
+
+"C，C++ 按F5编译运行
+map <F5> :call CompileRun()<CR>
+func! CompileRun()
+    exec "W"
+    if &filetype == 'c'
+        exec "!gcc % -Wall -o %<"
+        exec "! ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -Wall -o %<"
+        exec "! ./%<"
+    elseif &filetype == 'java' 
+        exec "!javac %" 
+        exec "!java %<"
+    elseif &filetype == 'sh'
+        :!./%
+    elseif &filetype == 'python'
+        exec '!time python' shellescape(@%, 1)
+    endif
+endfunc
+
+"C,C++的调试
+map <F6> :call Rungdb()<CR>
+func! Rungdb()
+    exec "w"
+    exec "!g++ % -g -o %<"
+    exec "!gdb ./%<"
+endfunc
+
+"}}}
+
+" Vundle ------------------{{{
+filetype off " required
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" 树形目录
+Plugin 'scrooloose/nerdtree' 
+"open short-cut
+map <C-n> :NERDTreeToggle<CR>
+"打开vim时如果没有文件自动打开NERDTree
+autocmd vimenter * if !argc()|NERDTree|endif
+"let g:NERDTreeWinSize = 25 "设定 NERDTree 视窗大小
+" ignore file types
+let NERDTreeIgnore=['\~$', '\.pyc$', '\.swp$']
+let g:NERDTreeHidden=0     "不显示隐藏文件
+"当NERDTree为剩下的唯一窗口时自动关闭
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"设置树的显示图标,required vim should support multi-byte, putty using Consolas font
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+"Making it prettier
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+
+Plugin 'Valloric/YouCompleteMe'
+let g:ycm_server_python_interpreter='/home/ke/.pyenv/shims/python'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_server_log_level = 'info'
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_complete_in_strings=1
+let g:ycm_key_invoke_completion = '<c-z>'
+set completeopt=menu,menuone
+noremap <c-z> <NOP>
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+"}}}
+
+filetype plugin indent on    " required
+
+" Program languages file title setting  --------------------
+augroup program_lang
+    "   autocmd!
+    autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
+    function! SetLangTitle()
+        " Define default annotation symbol
+        if (&filetype == 'python') || (&filetype == 'sh')
+            let lineas = "#"
+            call setline(1, lineas." -*- coding:utf-8 -*-")
+            if &filetype == 'sh'
+                call append(line("."), lineas."!/usr/bin/env bash")
+            else
+                call append(line("."), lineas."!/usr/bin/env python")
+            endif
+            call append(line(".")+1, lineas."-------------------------------------------------------------------------------")
+        elseif (&filetype == 'c') || (&filetype == 'cpp') || (&filetype == 'java') 
+            let lineas = "*"
+            call setline(1, "/*------------------------------------------------------------------------------")
+            call append(line("."), lineas)
+            call append(line(".")+1, lineas)
+        endif
+        call append(line(".")+2, lineas." File Name:   ".expand("%"))
+        call append(line(".")+3, lineas." Purpose:    ")
+        call append(line(".")+4, lineas)
+        call append(line(".")+5, lineas." Author:      Ke Wang")
+        call append(line(".")+6, lineas)
+        call append(line(".")+7, lineas." Created:     ".strftime("%Y-%m-%d",localtime()))
+        call append(line(".")+8, lineas." Copyright:   (c) Ke Wang ".strftime("%Y"))
+        call append(line(".")+9, lineas." Licence:     <your licence>")
+        if (&filetype == 'python') || (&filetype == 'sh')
+            call append(line(".")+10, lineas."-------------------------------------------------------------------------------")
+        endif
+        if (&filetype == 'c') || (&filetype == 'cpp') || (&filetype == 'java')
+            call append(line(".")+10, lineas."-----------------------------------------------------------------------------*/")
+        endif
+        call append(line(".")+11, "")
+        if &filetype == 'python'
+            call append(line(".")+12, "def main():")
+            call append(line(".")+13, "    pass")
+            call append(line(".")+14, "")
+            call append(line(".")+15, "if __name__ == '__main__':")
+            call append(line(".")+16, "    main()")
+        elseif &filetype == 'sh'
+            call append(line(".")+12, "main(){")
+            call append(line(".")+13, "{")
+            call append(line(".")+14, "    :")
+            call append(line(".")+15, "}")
+            call append(line(".")+16, "")
+            call append(line(".")+17, "#---------------- Main Program --------------")
+            call append(line(".")+18, "main")
+        elseif &filetype == 'c'
+            call append(line(".")+12, "#include<stdio.h>")
+            call append(line(".")+13, "int main()")
+            call append(line(".")+14, "{")
+            call append(line(".")+15, "    printf(\"Hello, World!\\n\");")
+            call append(line(".")+16, "    return (0);")
+            call append(line(".")+17, "}")
+            " Delete the blank lines 2 and 3 of created file
+            2,3d
+        elseif &filetype == 'cpp'
+            call append(line(".")+12, "#include <iostream>")
+            call append(line(".")+13, "using namespace std;")
+            call append(line(".")+14, "int main()")
+            call append(line(".")+15, "{")
+            call append(line(".")+16, "    std::cout << \"What's up!\\n\";")
+            call append(line(".")+17, "    return (0);")
+            call append(line(".")+18, "}")
+            " Delete the blank lines 2 and 3 of created file
+            2,3d
+        elseif &filetype == 'java'
+            call append(line(".")+12, "public class ".expand("%:r")." {")
+            call append(line(".")+13, "    /**")
+            call append(line(".")+14, "     * @param args the command line arguments")
+            call append(line(".")+15, "     */")
+            call append(line(".")+16, "")
+            call append(line(".")+17, "    public static void main(String[] args) {")
+            call append(line(".")+18, "        System.out.println(\"Hello World!\");")
+            call append(line(".")+19, "    }")
+            call append(line(".")+20, "}")
+            " Delete the blank lines 2 and 3 of created file
+            2,3d
+        endif
+        " file created，go to the bottom of file
+        autocmd BufNewFile * normal G
+    endfunc
+augroup END
+" END program languages file title setting --------------------
+" -------------------End Python
