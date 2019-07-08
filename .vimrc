@@ -61,13 +61,9 @@ nnoremap <c-j> <c-f>
 nnoremap <c-k> <c-b>
 
 " C-W +j/k/l/h可以窗口切换光标，不用按多次w
-" down
-nnoremap <C-J> <C-W><C-J> 
-" up
-nnoremap <C-K> <C-W><C-K> 
-" left"
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L> 
-" right"
 nnoremap <C-H> <C-W><C-H> 
 " 快速保存,退出,add 'stty -ixon' to .bashrc
 imap   <C-S>   <ESC>:w<CR>
@@ -75,7 +71,7 @@ map    <C-S>   :w<CR>
 imap   <C-Q>   <ESC>:q<CR>
 map    <C-Q>   :q<CR>
 
-"C，C++ 按F5编译运行
+" Enter F5 to compile and run programs
 map <F5> :call CompileRun()<CR>
 func! CompileRun()
     exec "W"
@@ -114,8 +110,12 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" 树形目录
+" Directory tree and related plugins
 Plugin 'scrooloose/nerdtree' 
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'ryanoasis/vim-devicons'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 "open short-cut
 map <C-n> :NERDTreeToggle<CR>
 "打开vim时如果没有文件自动打开NERDTree
@@ -124,6 +124,7 @@ autocmd vimenter * if !argc()|NERDTree|endif
 " ignore file types
 let NERDTreeIgnore=['\~$', '\.pyc$', '\.swp$']
 let g:NERDTreeHidden=0     "不显示隐藏文件
+let g:NERDTreeShowLineNumbers=1  " 是否显示行号
 "当NERDTree为剩下的唯一窗口时自动关闭
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 "设置树的显示图标,required vim should support multi-byte, putty using Consolas font
@@ -132,7 +133,20 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 "Making it prettier
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+set guifont=DroidSansMono_Nerd_Font:h11
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
 
+" Code automatic completion 
 Plugin 'Valloric/YouCompleteMe'
 let g:ycm_server_python_interpreter='/home/ke/.pyenv/shims/python'
 let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
@@ -146,11 +160,85 @@ let g:ycm_key_invoke_completion = '<c-z>'
 set completeopt=menu,menuone
 noremap <c-z> <NOP>
 
+" Python code automatic completion 
+Plugin 'davidhalter/jedi-vim'
+
+" Status bar setting  --------------------
+Plugin 'Lokaltog/vim-powerline'
+let g:minBufExplForceSyntaxEnable = 1
+
+if ! has('gui_running')
+    set ttimeoutlen=10
+    augroup FastEscape
+        autocmd!
+        au InsertEnter * set timeoutlen=0
+        au InsertLeave * set timeoutlen=1000
+    augroup END
+endif
+
+set laststatus=2 " Always display the statusline in all windows
+set guifont=Inconsolata\ for\ Powerline:h14
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+Plugin 'Yggdroot/indentLine'
+Plugin 'tell-k/vim-autopep8'
+autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
+
+" Code comments 
+Plugin 'scrooloose/nerdcommenter'
+let g:NERDSpaceDelims=1       " Add one blank space
+nmap <C-_>   <Plug>NERDCommenterToggle
+vmap <C-_>   <Plug>NERDCommenterToggle<CR>gv
+
+Plugin 'scrooloose/syntastic'
+let g:syntastic_error_symbol='X'
+let g:syntastic_warning_symbol='▸'
+let g:syntastic_check_on_open=1
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_highlighting=1
+let g:syntastic_python_checkers=['pyflakes'] " 使用pyflakes,速度比pylint快
+let g:syntastic_html_checkers=['tidy']
+" 修改高亮的背景色, 适应主题
+highlight SyntasticErrorSign guifg=white guibg=black
+" to see error location list
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_loc_list_height = 5
+function! ToggleErrors()
+    let old_last_winnr = winnr('$')
+    lclose
+    if old_last_winnr == winnr('$')
+        " Nothing was closed, open syntastic error location panel
+        Errors
+    endif
+endfunction
+nnoremap <Leader>s :call ToggleErrors()<cr>
+
+Plugin 'jiangmiao/auto-pairs'
+
+
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 "}}}
 
 filetype plugin indent on    " required
+
+" Editor color scheme setting  --------------------
+colorscheme onedark
+" colorscheme gruvbox
+if has('gui_running')
+    set background=light
+else
+    set background=dark
+endif
+"colorscheme solarized
 
 " Program languages file title setting  --------------------
 augroup program_lang
