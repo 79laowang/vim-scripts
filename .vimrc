@@ -248,12 +248,12 @@ augroup program_lang
         " Define default annotation symbol
         if (&filetype == 'python') || (&filetype == 'sh')
             let lineas = "#"
-            call setline(1, lineas." -*- coding:utf-8 -*-")
             if &filetype == 'sh'
-                call append(line("."), lineas."!/usr/bin/env bash")
+                call setline(1, lineas."!/usr/bin/env bash")
             else
-                call append(line("."), lineas."!/usr/bin/env python")
+                call setline(1, lineas."!/usr/bin/env python")
             endif
+            call append(line("."), lineas." -*- coding:utf-8 -*-")
             call append(line(".")+1, lineas."-------------------------------------------------------------------------------")
         elseif (&filetype == 'c') || (&filetype == 'cpp') || (&filetype == 'java') 
             let lineas = "*"
