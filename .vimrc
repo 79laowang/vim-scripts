@@ -48,6 +48,11 @@ augroup END
 map <C-A> ggVGY
 map! <C-A> <Esc>ggVGY
 map <F12> gg=G
+set number
+noremap <F3> :set invnumber<CR>
+inoremap <F3> <C-O>:set invnumber<CR>
+" Turn on/off Tagbar
+map <C-t> :set nosplitright<CR>:TagbarToggle<CR>:set splitright<CR>
 " 选中状态下 Ctrl+c 复制
 vmap <C-c> "+y
 set pastetoggle=<F2>
@@ -85,7 +90,7 @@ func! CompileRun()
         exec "!javac %" 
         exec "!java %<"
     elseif &filetype == 'sh'
-        :!./%
+        :!time bash ./%
     elseif &filetype == 'python'
         exec '!time python' shellescape(@%, 1)
     endif
@@ -116,6 +121,7 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plugin 'majutsushi/tagbar'  " show tags in a bar (functions etc) for easy browsing
 "open short-cut
 map <C-n> :NERDTreeToggle<CR>
 "打开vim时如果没有文件自动打开NERDTree
@@ -148,7 +154,7 @@ let g:NERDTreeIndicatorMapCustom = {
 
 " Code automatic completion 
 Plugin 'Valloric/YouCompleteMe'
-let g:ycm_server_python_interpreter='/home/ke/.pyenv/shims/python'
+let g:ycm_server_python_interpreter = '/home/ke/.pyenv/versions/2.7.16/bin/python'
 let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_show_diagnostics_ui = 0
@@ -162,6 +168,23 @@ noremap <c-z> <NOP>
 
 " Python code automatic completion 
 Plugin 'davidhalter/jedi-vim'
+Plugin 'roxma/nvim-yarp' " dependency of ncm2
+Plugin 'ncm2/ncm2'       " awesome autocomplete plugin
+Plugin 'HansPinckaers/ncm2-jedi' " fast python completion (use ncm2 if you want type info or snippet support)
+Plugin 'ncm2/ncm2-bufword'     " buffer keyword completion
+Plugin 'ncm2/ncm2-path'        " filepath completion<Paste>
+" jedi options
+let g:jedi#auto_initialization = 1
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#popup_on_dot = 0
+let g:jedi#completions_command = ""
+let g:jedi#show_call_signatures = "1"
+let g:jedi#show_call_signatures_delay = 0
+let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#show_call_signatures_modes = 'i'  " ni = also in normal mode
+let g:jedi#enable_speed_debugging=0"
 
 " Status bar setting  --------------------
 Plugin 'Lokaltog/vim-powerline'
@@ -181,6 +204,7 @@ set guifont=Inconsolata\ for\ Powerline:h14
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
 Plugin 'Yggdroot/indentLine'
+map <C-l> :IndentLinesToggle<CR>
 Plugin 'tell-k/vim-autopep8'
 autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 
@@ -284,29 +308,30 @@ augroup program_lang
             call append(line(".")+16, "    main()")
         elseif &filetype == 'sh'
             call append(line(".")+12, "main(){")
-            call append(line(".")+13, "{")
-            call append(line(".")+14, "    :")
-            call append(line(".")+15, "}")
-            call append(line(".")+16, "")
-            call append(line(".")+17, "#---------------- Main Program --------------")
-            call append(line(".")+18, "main")
+            call append(line(".")+13, "    :")
+            call append(line(".")+14, "}")
+            call append(line(".")+15, "")
+            call append(line(".")+16, "#---------------- Main Program --------------")
+            call append(line(".")+17, "main \"\$\@\"")
         elseif &filetype == 'c'
-            call append(line(".")+12, "#include<stdio.h>")
-            call append(line(".")+13, "int main()")
-            call append(line(".")+14, "{")
-            call append(line(".")+15, "    printf(\"Hello, World!\\n\");")
-            call append(line(".")+16, "    return (0);")
-            call append(line(".")+17, "}")
+            call append(line(".")+12, "#include <stdio.h>")
+            call append(line(".")+13, "")
+            call append(line(".")+14, "int main()")
+            call append(line(".")+15, "{")
+            call append(line(".")+16, "    printf(\"Hello, World!\\n\");")
+            call append(line(".")+17, "    return (0);")
+            call append(line(".")+18, "}")
             " Delete the blank lines 2 and 3 of created file
             2,3d
         elseif &filetype == 'cpp'
             call append(line(".")+12, "#include <iostream>")
             call append(line(".")+13, "using namespace std;")
-            call append(line(".")+14, "int main()")
-            call append(line(".")+15, "{")
-            call append(line(".")+16, "    std::cout << \"What's up!\\n\";")
-            call append(line(".")+17, "    return (0);")
-            call append(line(".")+18, "}")
+            call append(line(".")+14, "")
+            call append(line(".")+15, "int main()")
+            call append(line(".")+16, "{")
+            call append(line(".")+17, "    std::cout << \"What's up!\\n\";")
+            call append(line(".")+18, "    return (0);")
+            call append(line(".")+19, "}")
             " Delete the blank lines 2 and 3 of created file
             2,3d
         elseif &filetype == 'java'
