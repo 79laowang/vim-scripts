@@ -5,6 +5,8 @@ Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'  "to highlight files in nerdtree
 
 Plug 'Vimjas/vim-python-pep8-indent'  "better indenting for python
+Plug 'Yggdroot/indentLine'
+map <C-l> :IndentLinesToggle<CR>
 
 Plug 'davidhalter/jedi-vim'
 Plug 'roxma/nvim-yarp'  " dependency of ncm2
@@ -43,7 +45,7 @@ call plug#end()
 
 " ----------------------- Common setting --------------------
 " path to your python 
-let g:python3_host_prog = '/root/.pyenv/versions/3.7.4/bin/python3'
+let g:python3_host_prog = '/home/kkewang/.pyenv/versions/3.8.0/bin/python3'
 let g:python_host_prog = '/usr/bin/python2'
 set nocompatible
 filetype plugin on
@@ -122,6 +124,9 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 let g:NERDSpaceDelims=1       " Add one blank space
 nmap <C-_>   <Plug>NERDCommenterToggle
 vmap <C-_>   <Plug>NERDCommenterToggle<CR>gv
+set number
+noremap <F3> :set invnumber<CR>
+inoremap <F3> <C-O>:set invnumber<CR>
 
 " Enable folding
 set foldmethod=indent
