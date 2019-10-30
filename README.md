@@ -9,7 +9,7 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 3.  Configure Plugins:(Skip it, because here .vimrc included it)
 
 Put this at the top of your .vimrc to use Vundle. Remove plugins you don't need, they are for illustration purposes.
-
+```vim
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -53,6 +53,7 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
+```
 
 4. Install Plugins:
 
