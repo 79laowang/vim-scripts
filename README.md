@@ -61,3 +61,26 @@ Launch vim and run :PluginInstall
 
 To install from command line: vim +PluginInstall +qall
 
+5. Install theme onedark
+```Bash
+$ git clone https://github.com/joshdick/onedark.vim.git
+$ cd onedark.vim/
+$ cp colors/onedark.vim  ~/.vim/colors/
+$ cp autoload/onedark.vim  ~/.vim/autoload/
+```
+
+6. Install YouCompleteMe need to compile with python. 
+If you hit the following error,
+```Bash
+$ cd ~/.vim/bundle/YouCompleteMe
+$ ./install.sh 
+WARNING: this script is deprecated. Use the install.py script instead.
+Searching Python 3.7 libraries...
+ERROR: Python headers are missing in /usr/include/python3.7m.
+```
+On fedora, Install python3-devel package.
+```Bash
+$ sudo dnf install python3-devel
+$ ./install.sh
+```
+
