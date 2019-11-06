@@ -140,6 +140,9 @@ let g:SimpylFold_docstring_preview=1
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+set smarttab
+set expandtab                " 将tab自动转化为空格
+set shiftround               " 缩进时，取整
 
 " 支持PEP8风格的缩进
 au BufNewFile,BufRead *.py
@@ -218,7 +221,7 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
            call append(line(".")+1, lineas)
        endif
        call append(line(".")+2, lineas." File Name:   ".expand("%"))
-       call append(line(".")+3, lineas." Purpose:    ")
+       call append(line(".")+3, lineas." Purpose:     ")
        call append(line(".")+4, lineas)
        call append(line(".")+5, lineas." Author:      Ke Wang")
        call append(line(".")+6, lineas)
@@ -247,21 +250,23 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
            call append(line(".")+17, "main \"\$\@\"")
        elseif &filetype == 'c'
            call append(line(".")+12, "#include <stdio.h>")
-           call append(line(".")+13, "int main()")
-           call append(line(".")+14, "{")
-           call append(line(".")+15, "    printf(\"Hello, World!\\n\");")
-           call append(line(".")+16, "    return (0);")
-           call append(line(".")+17, "}")
+           call append(line(".")+13, "")
+           call append(line(".")+14, "int main()")
+           call append(line(".")+15, "{")
+           call append(line(".")+16, "    printf(\"Hello, World!\\n\");")
+           call append(line(".")+17, "    return 0;")
+           call append(line(".")+18, "}")
            " Delete the blank lines 2 and 3 of created file
            2,3d
        elseif &filetype == 'cpp'
            call append(line(".")+12, "#include <iostream>")
            call append(line(".")+13, "using namespace std;")
-           call append(line(".")+14, "int main()")
-           call append(line(".")+15, "{")
-           call append(line(".")+16, "    std::cout << \"What's up!\\n\";")
-           call append(line(".")+17, "    return (0);")
-           call append(line(".")+18, "}")
+           call append(line(".")+14, "")
+           call append(line(".")+15, "int main()")
+           call append(line(".")+16, "{")
+           call append(line(".")+17, "    std::cout << \"What's up!\\n\";")
+           call append(line(".")+18, "    return 0;")
+           call append(line(".")+19, "}")
            " Delete the blank lines 2 and 3 of created file
            2,3d
        elseif &filetype == 'java'
