@@ -91,6 +91,8 @@ func! CompileRun()
         exec "!java %<"
     elseif &filetype == 'sh'
         :!time bash ./%
+    elseif &filetype == 'ruby'
+        :!time ruby ./%
     elseif &filetype == 'go'
         exec "!go build %<"
         exec "!time go run %"
