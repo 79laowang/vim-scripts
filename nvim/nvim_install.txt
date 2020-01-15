@@ -10,6 +10,15 @@ yum -y install gcc bzip2 zlib-devel libffi-devel openssl-devel
 pyenv install 3.7.4                                                                                                                       
 pyenv global 3.7.4
 
+- For vim-go setting
+Before do setting, please confirm that the following ENV variables for golang were added into $HOME/.bashrc file and take affect.
+export GOPATH=$HOME/go
+export GOROOT=/usr/local/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+After the vim-go plugin installed, need to run in vim with the following CLI to install golang related packages,
+:GoInstallBinaries
+Until displays vim-go: installing finished.
+
 - For nvim plugin manager
 Install vim-plug
 
