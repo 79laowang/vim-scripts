@@ -38,14 +38,39 @@ Plug 'neomake/neomake'
 
 Plug 'tmhedberg/SimpylFold'
 
+" git info for nerdtree
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'  " git hint in documents 
+
 Plug 'kien/ctrlp.vim'  " fuzzy search files
 
+" golang support
+Plug 'fatih/vim-go', { 'tag': '*' }
+" go 中的代码追踪，输入 gd 就可以自动跳转
+Plug 'dgryski/vim-godef'
+
+" markdown 插件
+Plug 'iamcco/mathjax-support-for-mkdp'
+Plug 'iamcco/markdown-preview.vim'
+
+"Youdao dictionary
+Plug 'ianva/vim-youdao-translater'
+
+" ----- color scheme -----
+" colorscheme neodark
+Plug 'KeitaNakamura/neodark.vim'
+" colorscheme monokai
+Plug 'crusoexia/vim-monokai'
+" colorscheme github 
+Plug 'acarapetis/vim-colors-github'
+" colorscheme one 
+Plug 'rakr/vim-one'
 
 call plug#end()
 
 " ----------------------- Common setting --------------------
 " path to your python 
-let g:python3_host_prog = '/home/kkewang/.pyenv/versions/3.8.0/bin/python3'
+let g:python3_host_prog = '~/.pyenv/shims/python'
 let g:python_host_prog = '/usr/bin/python2'
 set nocompatible
 filetype plugin on
@@ -120,7 +145,22 @@ let NERDTreeIgnore=['\.pyc$', '\~$', 'node_modules'] "ignore files in NERDTree
 let NERDTreeMinimalUI=1
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
+" Setting for nerdtree-git-plugin
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
 
+" startup vim in terminal, share NERDTree
+let g:nerdtree_tabs_open_on_console_startup=1 
 let g:NERDSpaceDelims=1       " Add one blank space
 nmap <C-_>   <Plug>NERDCommenterToggle
 vmap <C-_>   <Plug>NERDCommenterToggle<CR>gv
@@ -171,6 +211,68 @@ set pastetoggle=<F2>
 
 " Turn on/off Tagbar
 map <C-t> :set nosplitright<CR>:TagbarToggle<CR>:set splitright<CR>
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+    \ }
+
+"==============================================================================
+" vim-go plugin setting 
+"==============================================================================
+let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+let g:go_autodetect_gopath = 1
+let g:go_list_type = "quickfix"
+
+let g:go_version_warning = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_generate_tags = 1
+let g:godef_split=2
+
+" set mapleader
+let mapleader = ","
+
+" vim-go custom mappings
+au FileType go nmap <Leader>s <Plug>(go-implements)
+au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+au FileType go nmap <Leader>e <Plug>(go-rename)
 
 " Enter F5 to compile and run programs
 map <F5> :call CompileRun()<CR>
@@ -187,6 +289,11 @@ func! CompileRun()
         exec "!java %<"
     elseif &filetype == 'sh'
         :!time bash ./%
+    elseif &filetype == 'ruby'
+        :!time ruby ./%
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
     elseif &filetype == 'python'
         exec '!time python' shellescape(@%, 1)
     endif
@@ -286,3 +393,4 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
        autocmd BufNewFile * normal G
    endfunc
 augroup END
+
