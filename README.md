@@ -65,6 +65,8 @@ To install from command line: vim +PluginInstall +qall
 ```Bash
 $ git clone https://github.com/joshdick/onedark.vim.git
 $ cd onedark.vim/
+$ [ ! -d ~/.vim/colors/ ] && mkdir -p ~/.vim/colors/
+$ [ ! -d ~/.vim/autoload/ ] && mkdir -p ~/.vim/autoload/
 $ cp colors/onedark.vim  ~/.vim/colors/
 $ cp autoload/onedark.vim  ~/.vim/autoload/
 ```
