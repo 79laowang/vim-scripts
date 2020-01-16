@@ -84,7 +84,7 @@ ERROR: Python headers are missing in /usr/include/python3.7m.
 On CentOS7.x if occurred the below errors,
 CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found. 
 ...
-```
+
 Solution:
 ```Bash
 $ sudo yum install gcc-c++
