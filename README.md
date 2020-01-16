@@ -79,11 +79,16 @@ $ ./install.sh
 WARNING: this script is deprecated. Use the install.py script instead.
 Searching Python 3.7 libraries...
 ERROR: Python headers are missing in /usr/include/python3.7m.
-If occurred the below errors,
-CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found.   Please set CMAKE_CXX_COMPILER to a valid compiler path or name
+```
+
+On CentOS7.x if occurred the below errors,
+CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found. 
+...
 ```
 Solution:
+```Bash
 $ sudo yum install gcc-c++
+```
 
 On fedora, Install python3-devel package.
 ```Bash
