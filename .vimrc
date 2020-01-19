@@ -17,6 +17,7 @@ set softtabstop=4            " 按退格键是可以一次删除4个空格
 set smarttab                 
 set expandtab                " 将tab自动转化为空格
 set shiftround               " 缩进时，取整
+set ambiwidth=double            " 将所有字符显示为全角宽度
 
 set smartindent              " 智能缩进
 set autoindent               " 自动缩进
@@ -25,7 +26,7 @@ let mapleader=","            " 设置mapleader为逗号
 set fileformat=unix          " Set保存文件格式
 " 设置编码
 set encoding=utf-8
-language messages zh_CN.utf-8
+set termencoding=utf-8
 set t_Co=256
 
 " Tab Set -------------------
@@ -124,7 +125,6 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree' 
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'ryanoasis/vim-devicons'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'majutsushi/tagbar'  " show tags in a bar (functions etc) for easy browsing
 "open short-cut
@@ -144,7 +144,7 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 "Making it prettier
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-set guifont=DroidSansMono_Nerd_Font:h11
+set guifont=DejaVu\ Sans\ Mono:h11
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "✹",
     \ "Staged"    : "✚",
@@ -159,7 +159,7 @@ let g:NERDTreeIndicatorMapCustom = {
 
 " Code automatic completion 
 Plugin 'Valloric/YouCompleteMe'
-let g:ycm_server_python_interpreter = '/home/ke/.pyenv/versions/2.7.16/bin/python'
+let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_show_diagnostics_ui = 0
@@ -245,6 +245,75 @@ nnoremap <Leader>s :call ToggleErrors()<cr>
 
 Plugin 'jiangmiao/auto-pairs'
 
+" ---- vim golang setting ----
+Plugin 'fatih/vim-go'
+Plugin 'dgryski/vim-godef'
+
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+    \ }
+
+"==============================================================================
+" vim-go plugin setting 
+"==============================================================================
+let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+let g:go_autodetect_gopath = 1
+let g:go_list_type = "quickfix"
+
+let g:go_version_warning = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_generate_tags = 1
+let g:godef_split=2
+
+" set mapleader
+let mapleader = ","
+
+" vim-go custom mappings
+au FileType go nmap <Leader>s <Plug>(go-implements)
+au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+au FileType go nmap <Leader>e <Plug>(go-rename)
+
+" ---- vim-ruby setting ----
+Plugin 'vim-ruby/vim-ruby'
 
 " Brief help
 " :PluginList       - lists configured plugins
@@ -272,15 +341,17 @@ endif
 " Program languages file title setting  --------------------
 augroup program_lang
     "   autocmd!
-    autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
+    autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java,*.rb exec ":call SetLangTitle()"
     function! SetLangTitle()
         " Define default annotation symbol
-        if (&filetype == 'python') || (&filetype == 'sh')
+        if (&filetype == 'python') || (&filetype == 'sh') || (&filetype == 'ruby')
             let lineas = "#"
             if &filetype == 'sh'
                 call setline(1, lineas."!/usr/bin/env bash")
-            else
+            elseif &filetype == 'python'
                 call setline(1, lineas."!/usr/bin/env python")
+            else 
+                call setline(1, lineas."!/usr/bin/env ruby")
             endif
             call append(line("."), lineas." -*- coding:utf-8 -*-")
             call append(line(".")+1, lineas."-------------------------------------------------------------------------------")
@@ -298,7 +369,7 @@ augroup program_lang
         call append(line(".")+7, lineas." Created:     ".strftime("%Y-%m-%d",localtime()))
         call append(line(".")+8, lineas." Copyright:   (c) Ke Wang ".strftime("%Y"))
         call append(line(".")+9, lineas." Licence:     <your licence>")
-        if (&filetype == 'python') || (&filetype == 'sh')
+        if (&filetype == 'python') || (&filetype == 'sh') || (&filetype == 'ruby')
             call append(line(".")+10, lineas."-------------------------------------------------------------------------------")
         endif
         if (&filetype == 'c') || (&filetype == 'cpp') || (&filetype == 'java')
@@ -318,6 +389,8 @@ augroup program_lang
             call append(line(".")+15, "")
             call append(line(".")+16, "#---------------- Main Program --------------")
             call append(line(".")+17, "main \"\$\@\"")
+        elseif &filetype == 'ruby'
+            call append(line(".")+12, "print \"Hello Ruby!\\n\"")
         elseif &filetype == 'c'
             call append(line(".")+12, "#include <stdio.h>")
             call append(line(".")+13, "")
