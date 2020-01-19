@@ -312,12 +312,14 @@ augroup program_lang
 autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
    function! SetLangTitle()
        " Define default annotation symbol
-       if (&filetype == 'python') || (&filetype == 'sh')
+       if (&filetype == 'python') || (&filetype == 'sh') || (&filetype == 'ruby')
            let lineas = "#"
            if &filetype == 'sh'
                call setline(1, lineas."!/usr/bin/env bash")
+           elseif &filetype == 'python'
+               call setline(1, lineas."!/usr/bin/env python")    
            else
-               call setline(1, lineas."!/usr/bin/env python")
+               call setline(1, lineas."!/usr/bin/env ruby")
            endif
            call append(line("."), lineas." -*- coding:utf-8 -*-")
            call append(line(".")+1, lineas."-------------------------------------------------------------------------------")
@@ -335,7 +337,7 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
        call append(line(".")+7, lineas." Created:     ".strftime("%Y-%m-%d",localtime()))
        call append(line(".")+8, lineas." Copyright:   (c) Ke Wang ".strftime("%Y"))
        call append(line(".")+9, lineas." Licence:     <your licence>")
-       if (&filetype == 'python') || (&filetype == 'sh')
+       if (&filetype == 'python') || (&filetype == 'sh') || (&filetype == 'ruby')
            call append(line(".")+10, lineas."-------------------------------------------------------------------------------")
        endif
        if (&filetype == 'c') || (&filetype == 'cpp') || (&filetype == 'java')
@@ -355,6 +357,8 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
            call append(line(".")+15, "")
            call append(line(".")+16, "#---------------- Main Program --------------")
            call append(line(".")+17, "main \"\$\@\"")
+       elseif &filetype == 'ruby'
+           call append(line(".")+12, "print \"Hello Ruby!\\n\"")
        elseif &filetype == 'c'
            call append(line(".")+12, "#include <stdio.h>")
            call append(line(".")+13, "")
