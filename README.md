@@ -65,6 +65,8 @@ To install from command line: vim +PluginInstall +qall
 ```Bash
 $ git clone https://github.com/joshdick/onedark.vim.git
 $ cd onedark.vim/
+$ [ ! -d ~/.vim/colors/ ] && mkdir -p ~/.vim/colors/
+$ [ ! -d ~/.vim/autoload/ ] && mkdir -p ~/.vim/autoload/
 $ cp colors/onedark.vim  ~/.vim/colors/
 $ cp autoload/onedark.vim  ~/.vim/autoload/
 ```
@@ -78,6 +80,16 @@ WARNING: this script is deprecated. Use the install.py script instead.
 Searching Python 3.7 libraries...
 ERROR: Python headers are missing in /usr/include/python3.7m.
 ```
+
+On CentOS7.x if occurred the below errors,
+CMake Error: your CXX compiler: "CMAKE_CXX_COMPILER-NOTFOUND" was not found. 
+...
+
+Solution:
+```Bash
+$ sudo yum install gcc-c++
+```
+
 On fedora, Install python3-devel package.
 ```Bash
 $ sudo dnf install python3-devel
