@@ -96,3 +96,14 @@ $ sudo dnf install python3-devel
 $ ./install.sh
 ```
 
+If you hit the following error, when you open vi,
+```Bash
+YCM core library compiled for... Python 3. Set the 'g:ycm_server_python_interpreter' option to a Python 2 interpreter path
+```
+
+On Arch/Manjaro,
+```Bash
+sudo pacman -S clang # Compiled and get /usr/lib/libclang.so
+
+cmake -G "Unix Makefiles" -DEXTERNAL_LIBCLANG_PATH=/usr/lib/libclang.so. ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+```
