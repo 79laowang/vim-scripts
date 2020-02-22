@@ -75,7 +75,10 @@ let g:python_host_prog = '/usr/bin/python2'
 set nocompatible
 filetype plugin on
 " 设置空白字符的视觉提示
-set list listchars=extends:❯,precedes:❮,tab:▸\ ,trail:˽
+set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+" set indentLine
+let g:indentLine_setColors = 0
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " 高亮当前行
 set cursorline
 " 显示行号
@@ -246,7 +249,7 @@ let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
 let g:go_autodetect_gopath = 1
 let g:go_list_type = "quickfix"
 
-let g:go_version_warning = 1
+let g:go_version_warning = 0
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
