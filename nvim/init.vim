@@ -76,6 +76,7 @@ set nocompatible
 filetype plugin on
 " 设置空白字符的视觉提示
 set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+map <C-k> :set nolist<CR>
 " set indentLine
 let g:indentLine_setColors = 0
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
