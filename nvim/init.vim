@@ -6,7 +6,7 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'  "to highlight files in nerdtree
 
 Plug 'Vimjas/vim-python-pep8-indent'  "better indenting for python
 Plug 'Yggdroot/indentLine'
-map <C-l> :IndentLinesToggle<CR>
+map <C-i> :IndentLinesToggle<CR>
 
 Plug 'davidhalter/jedi-vim'
 Plug 'roxma/nvim-yarp'  " dependency of ncm2
@@ -75,11 +75,9 @@ let g:python_host_prog = '/usr/bin/python2'
 set nocompatible
 filetype plugin on
 " 设置空白字符的视觉提示
-set list listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set list listchars=extends:❯,precedes:❮,tab:▸\ ,trail:˽
 map <C-k> :set nolist<CR>
-" set indentLine
-let g:indentLine_setColors = 0
-let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
 " 高亮当前行
 set cursorline
 " 显示行号
@@ -172,6 +170,11 @@ set number
 noremap <F3> :set invnumber<CR>
 inoremap <F3> <C-O>:set invnumber<CR>
 
+" Set open file at last quit position
+if has("autocmd")
+    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
 " Enable folding
 set foldmethod=indent
 set foldlevel=99
@@ -250,7 +253,7 @@ let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
 let g:go_autodetect_gopath = 1
 let g:go_list_type = "quickfix"
 
-let g:go_version_warning = 0
+let g:go_version_warning = 1
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
@@ -313,7 +316,7 @@ endfunc
 
 
 augroup program_lang
-autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
+autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java,*.rb exec ":call SetLangTitle()"
    function! SetLangTitle()
        " Define default annotation symbol
        if (&filetype == 'python') || (&filetype == 'sh') || (&filetype == 'ruby')
@@ -321,8 +324,8 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
            if &filetype == 'sh'
                call setline(1, lineas."!/usr/bin/env bash")
            elseif &filetype == 'python'
-               call setline(1, lineas."!/usr/bin/env python")    
-           else
+               call setline(1, lineas."!/usr/bin/env python")
+           else 
                call setline(1, lineas."!/usr/bin/env ruby")
            endif
            call append(line("."), lineas." -*- coding:utf-8 -*-")
@@ -401,4 +404,3 @@ autocmd BufNewFile *.py,*.cpp,*.[ch],*.sh,*.java exec ":call SetLangTitle()"
        autocmd BufNewFile * normal G
    endfunc
 augroup END
-
