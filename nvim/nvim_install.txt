@@ -40,3 +40,4 @@ After above step, re-install plugin nvim-yarp from nvim.
 echo "alias vi=nvim" >> ~/.bash_profile
 exec $SHELL -l
 
+The config file for nvim is located ~/.config/nvim/init.vim
